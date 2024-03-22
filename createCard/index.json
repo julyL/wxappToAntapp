@@ -1,0 +1,39 @@
+{
+	"usingComponents": {
+		"six-card": "/packageA/components/sixCard/index",
+		"ad-alt": "/packageA/adAlt/index",
+		"savecard-box": "/packageA/savecard-box/index",
+		"photo-face-detect": "/packageA/photo-face-detect/index",
+		"mark-line": "/packageA/mark-line/index",
+		"crop-image": "/packageA/crop-image/index",
+		"check-card": "/packageA/components/check-card/index",
+		"checkrule-result": "/packageA/components/checkrule-result/index",
+		"c-input": "/packageA/components/c-input/index",
+		"sh-ad": "/packageA/sh-ad/index",
+		"compress-image": "/components/compress-image/index",
+		"color-select": "/packageA/color-select/index",
+		"addto-myminiprogram": "/packageA/components/addto-myminiprogram/index",
+		"handling-img": "/packageA/handling-img/index",
+		"evaluate-save": "/packageA/evaluate-save/index",
+		"un-evaluate": "/packageA/components/un-evaluate/index",
+		"cloth-select": "/packageA/components/clothSelect/index",
+		"save-cloth": "/packageA/components/save-cloth/index",
+		"bottom-dialog": "/packageA/components/bottom-dialog/index",
+		"cloth-alt": "/packageA/components/cloth-alt/index",
+		"order-check": "/packageA/components/order-check/index",
+		"navbar": "../../components/navBar/index"
+	},
+	"navigationStyle": "custom",
+	"disableScroll": true,
+	"componentPlaceholder": {
+		"c-input": "view",
+		"six-card": "view",
+		"ad-alt": "view",
+		"savecard-box": "view",
+		"photo-face-detect": "view",
+		"color-select": "view",
+		"addto-myminiprogram": "view",
+		"mark-line": "view",
+		"bottom-dialog": "view"
+	}
+}

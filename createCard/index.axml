@@ -1,0 +1,130 @@
+<view class='page-container-classname'>
+                <view class="page {{isIPX?'page__isIphoneX':''}}" ref='saveChildRef0' onTap='antmoveAction' data-antmove-tap='hideFocus'>
+  <navbar type='back' class='my_navbar' titleText="{{from=='changeColor'?'证件照换底色':cardInfo.name}}" onGoBack='goBack' ref='saveChildRef1'>
+  </navbar>
+  <view class='container' style='opacity:{{cardImageSrc?1:0}};top:{{containerTop}}px;'>
+    <view class='switch__btns' a:if='{{!clothToolShow}}'>
+      <view class='switch__text' data-index='0' onTap='antmoveAction' data-antmove-tap='switchView'>
+        单张
+      </view>
+      <view class='switch__text' data-index='1' onTap='antmoveAction' data-antmove-tap='switchView'>
+        排版照        <view class='switch__red' a:if='{{activeViewTypeIndex==0&&redPointShow}}'>
+        </view>
+      </view>
+      <view class='switch__btn' style="transform:translate({{activeViewTypeIndex==0?'0':'100%'}},-50%)">
+      </view>
+    </view>
+    <view class='card__box' a:if='{{activeViewTypeIndex==0}}' style='opacity:{{cardWidth&&cardImageSrc?1:0}};width:{{cardWidth+cardOutBorderWidth*2}}px;height:{{cardHeight+cardOutBorderWidth*2+cardPaddingTop*2}}px;padding:{{cardPaddingTop}}px 0 {{cardPaddingTop}}px;'>
+      <view class="card__boxInner {{clothToolShow?'card__boxInner--small':''}}" style='padding: {{cardOutBorderWidth}}px'>
+        <mark-line cssStyle='position:absolute;top:-{{cardOutBorderWidth/2}}rpx;left:{{cardOutBorderWidth}}px;width:{{cardWidth}}px;' text="{{(cardInfo.isOrigin?cardInfo.originImageWidth:cardInfo.w)+'px'}}" a:if='{{!clothToolShow}}' ref='saveChildRef2'>
+        </mark-line>
+        <mark-line cssStyle='position:absolute;bottom:-{{cardOutBorderWidth/2}}rpx;right:{{cardOutBorderWidth}}px;width:{{cardWidth}}px;' text="{{(cardInfo.isOrigin?cardInfo.cmWidth:cardInfo.width)+'mm'}}" a:if='{{!clothToolShow}}' ref='saveChildRef3'>
+        </mark-line>
+        <mark-line cssStyle='position:absolute;left:-{{cardOutBorderWidth/2}}rpx;top:{{cardOutBorderWidth}}px;height:{{cardHeight}}px;' text="{{(cardInfo.isOrigin?cardInfo.originImageHeight:cardInfo.h)+'px'}}" textStyle='text-orientation: sideways;' direction='vertical' a:if='{{!clothToolShow}}' ref='saveChildRef4'>
+        </mark-line>
+        <mark-line cssStyle='position:absolute;right:-{{cardOutBorderWidth/2}}rpx;top:{{cardOutBorderWidth}}px;height:{{cardHeight}}px;' text="{{(cardInfo.isOrigin?cardInfo.cmHeight:cardInfo.height)+'mm'}}" textStyle='text-orientation: mixed;' direction='vertical' a:if='{{!clothToolShow}}' ref='saveChildRef5'>
+        </mark-line>
+        <view class='cardImage-w' style='width:{{cardWidth}}px;height:{{cardHeight}}px;' onTap='antmoveAction' data-antmove-tap='previewSingleCard'>
+          <view class='cardImage__bg' a:if='{{activeColorIndex>=0&&!colorList[activeColorIndex].custom}}' style='background:{{colorList[activeColorIndex].color}};'>
+          </view>
+          <image class='cardImage__bg' src='{{colorList[activeColorIndex].colorImgUrl}}' a:if='{{colorList[activeColorIndex].custom}}'>
+          </image>
+          <image class='previewmark__img' mode='aspectFill' src='/assets/image/id_certificate_icon_previewmark@2x.png' style='width:{{cardWidth/250*260}}rpx;height:{{cardWidth/250*180}}rpx;bottom:0;right:0;' a:if='{{!activeClothId}}'>
+          </image>
+          <image class='cardImage__img' mode='aspectFill' src='{{originCardImageSrc}}' style="{{originImageShow?'opacity:1':'opacity:0'}}">
+          </image>
+          <image class="cardImage__img {{beautyAnimationShow?'beautyAnimation':''}}" mode='aspectFill' src='{{cardImageSrc}}' style="{{!originImageShow?'opacity:1':'opacity:0'}}">
+          </image>
+          <view class='cardImage__text' style='height: 24px; font-size: 16px' a:if='{{cardBottomText}}'>
+            {{cardBottomText}}
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='sixcard-w' a:if='{{activeViewTypeIndex==1}}' style='height:{{cardHeight+cardOutBorderWidth*2}}px;margin-top:{{cardPaddingTop}}px;' onTap='antmoveAction' data-antmove-tap='previewSixCard'>
+      <view class='sixcard-inner' a:if='{{sixCardImageSrc}}' style='width: 686rpx; height: 460rpx'>
+        <image class='sixcard__img' mode='aspectFill' src='{{originSixCardImageSrc}}' style="{{originImageShow?'opacity:1':'opacity:0'}}">
+        </image>
+        <image class="sixcard__img {{beautyAnimationShow?'beautyAnimation':''}}" mode='aspectFill' src='{{sixCardImageSrc}}' style="{{!originImageShow?'opacity:1':'opacity:0'}}">
+        </image>
+        <view class='sixcard__alt'>
+          使用标准六寸相纸冲印
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='footer' style='opacity:{{colorSelectShow||clothToolShow?0:1}}'>
+    <view class="checkRuleStatus checkRuleStatus--{{checkAltInfo.status}} {{checkAltInfo.hidden==1?'checkRuleStatus--hidden':''}}" a:if='{{checkAltInfo.text&&activeViewTypeIndex==0}}' onTap='antmoveAction' data-antmove-tap='showCheckResult'>
+      <view class='checkRuleStatus__text'>
+        {{checkAltInfo.text}}
+      </view>
+      <image class='checkRuleStatus__arrow' mode='aspectFill' src="{{checkAltInfo.status=='pass'?'/assets/image/general_icon_rightarrow_w@2x.png':'/assets/image/general_icon_rightarrow_o@2x.png'}}">
+      </image>
+    </view>
+    <view class='danmu' a:if='{{danmu&&danmu.title&&activeViewTypeIndex==1}}' onTap='antmoveAction' data-antmove-tap='stopLaunch'>
+      <image class='danmu__headimg' mode='aspectFill' src="{{danmu.headImg||'https://img.elfinbook.com/20240104/0/BBF2188B50960A8C.png'}}">
+      </image>
+      <view class='danmu__info'>
+        {{danmu.title}}
+      </view>
+    </view>
+    <view class='footer__switch' a:if='{{(beautyStatus==2||highDefinitionStatus==2||lightStatus==2)&&!clothToolShow}}' catchTouchStart='antmoveAction' data-antmove-touchstart='switchToOrigin' catchTouchEnd='antmoveAction' data-antmove-touchend='switchToFixed'>
+      <image class='footer__switchIcon' mode='aspectFill' src='/assets/image/id_general_icon_contrast@2x.png'>
+      </image>
+    </view>
+    <view class='tool__list'>
+      <view class="tool__item {{((item.type=='beauty'&&beautyStatus==1)||(item.type=='addLight'&&lightStatus==1))?'tool__item--disable':''}} {{'tool__item--'+item.type}}" a:for='{{toolList}}' data-index='{{index}}' a:if="{{!(isIos&&item.type=='changeClothes')||1}}" ref-numbers='{{toolList}}' onTap='antmoveAction' data-antmove-tap='switchToolIndex'>
+        <view class='tool__iconw'>
+          <image class='tool__icon' mode='aspectFill' src="{{((item.type=='beauty'&&beautyStatus==2)||(item.type=='highDefinition'&&highDefinitionStatus==2)||(item.type=='addText'&&cardBottomText)||(item.type=='addLight'&&lightStatus==2))?item.icon_s:item.icon}}">
+          </image>
+          <view class='icon-loading' a:if="{{(item.type=='beauty'&&beautyStatus==1)||(item.type=='addLight'&&lightStatus==1)}}">
+          </view>
+        </view>
+        <view class='tool__text'>
+          {{((item.type=='beauty'&&beautyStatus==1)||(item.type=='addLight'&&lightStatus==1))?item.loading__text:((item.type=='beauty'&&beautyStatus==2)||(item.type=='addText'&&cardBottomText)||(item.type=='addLight'&&lightStatus==2))?item.cancel__text:item.text}}
+        </view>
+      </view>
+    </view>
+    <view class='footer__line'>
+      <view class='submit__btns'>
+        <view class='submit__border' onTap='antmoveAction' data-antmove-tap='saveCard'>
+          {{activeViewTypeIndex==0?'保存电子照':'保存排版照'}}
+        </view>
+        <view class="submit__bg {{activeViewTypeIndex==1?'animation':''}}" style='background:{{printbutton_color}}' onTap='antmoveAction' data-antmove-tap='savePaperCard'>
+          <view class='submit__text1'>
+            {{printbutton_firsttext}}
+          </view>
+          <view class='submit__text2'>
+            {{cardProduct.tips}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <canvas class='myCanvas' style='width:{{cardWidth*dpr}}px;height:{{cardHeight*dpr}}px;' id='myCanvas'>
+  </canvas>
+  <six-card class='sixcard' a:if='{{sixCardComponentShow}}' ref='saveChildRef6'>
+  </six-card>
+  <savecard-box show='{{saveBoxShow}}' a:if='{{saveBoxShow}}' boxData='{{boxData}}' onClose='hideSaveBox' onHandleClick='clickSaveCardBox' ref='saveChildRef7'>
+  </savecard-box>
+</view><photo-face-detect class='photo-face-detect' a:if='{{faceDetectComponentShow}}' ref='saveChildRef8'>
+</photo-face-detect><crop-image class='crop-image' ref='saveChildRef9'>
+</crop-image><check-card a:if='{{checkRuleLoadingShow}}' class='check-card' imageSrc='{{originImageSrc}}' checkRuleList='{{checkRuleList}}' handlingText='{{currentCheckRuleText}}' ref='saveChildRef10'>
+</check-card><handling-img a:if='{{handlingImageLoading}}' class='handling-img' bottomText='{{loadingText}}' ref='saveChildRef11'>
+</handling-img><c-input title='添加文字' placeholder='请输入文字' show='{{cardTextBoxShow}}' a:if='{{cardTextBoxShow}}' maxlength='{{24}}' onClose='closeCardTextBox' onConfirm='confirmCardTextBox' ref='saveChildRef12'>
+</c-input><sh-ad id='shAd' ref='saveChildRef13'>
+</sh-ad><compress-image class='compressImage' a:if='{{compressImageShow||1}}' ref='saveChildRef14'>
+</compress-image><color-select show='{{colorSelectShow}}' a:if='{{colorSelectShow}}' colorList='{{colorList}}' isIPX='{{isIPX}}' activeColorIndex='{{activeColorIndex}}' background='{{cardInfo.background}}' onSwitchColor='switchColor' onCancel='confirmColorSelect' onConfirm='confirmColorSelect' onUseCustomColor='useCustomColor' ref='saveChildRef15'>
+</color-select><ad-alt show='{{adAltShow}}' a:if='{{adAltShow}}' noAd='{{true}}' confirmText='开通会员' vipLimitText='保存排版照' showCancelButton='{{true}}' cancelText='保存单张' onClose='hideAdAlt' onConfirm='goVip' onCancel='cancelAdAlt' ref='saveChildRef16'>
+</ad-alt><addto-myminiprogram a:if='{{addtoMiniprogramShow}}' autoCheck='{{false}}' type='{{2}}' class='addto-myminiprogram' onTap='closeAddToMyMiniProgram' ref='saveChildRef17'>
+</addto-myminiprogram><custom-bg>
+</custom-bg><checkrule-result isFaceBlur='{{faceHighDefinitionShow}}' checkRuleList='{{checkRuleList}}' show='{{checkRuleResultShow}}' onClose='closeCheckRuleResult' onOptimize='highDefinition' ref='saveChildRef18'>
+</checkrule-result><evaluate-save show='{{evaluateSaveShow}}' onFinishEvaluate='finishEvaluate' onClose='closeEvaluate' ref='saveChildRef19'>
+</evaluate-save><un-evaluate show='{{unevaluateShow}}' mustFinishEvaluate='{{true}}' onClose='hideUnEvaluate' ref='saveChildRef20'>
+</un-evaluate><cloth-select activeClothId='{{activeClothId}}' clothTemplateList='{{clothTemplateList}}' height='{{clothToolHeight}}' a:if='{{clothToolShow}}' class='clothSelect' clothBeautyOpen='{{clothBeautyOpen}}' recommandClothType='{{recommandClothType}}' bgColor="{{activeColorIndex>=0&&!colorList[activeColorIndex].custom?colorList[activeColorIndex].color:''}}" bgImgSrc="{{colorList[activeColorIndex].custom?colorList[activeColorIndex].colorImgUrl:''}}" onClose='useClothTool' onConfirm='useClothTool' onSwitchClothType='switchClothType' onSwitchCloth='switchCloth' onChangeHeight='changeHeight' onSwitchBeauty='switchClothBeauty' ref='saveChildRef21'>
+</cloth-select><save-cloth show='{{clothSaveBoxShow}}' boxData='{{boxData}}' activeClothId='{{activeClothId}}' onClose='hideClothSaveBox' onClothFinishPayment='clothFinishPayment' ref='saveChildRef22'>
+</save-cloth><bottom-dialog show='{{bottomDialogShow}}' text='{{failReasonText}}' onClose='closeBottomDialog' onClickBtn='closeBottomDialog' ref='saveChildRef23'>
+</bottom-dialog><cloth-alt show='{{clothAltShow}}' backgroundColor='{{colorList[activeColorIndex].color}}' imageSrc='{{changeClothPreviewImageSrc}}' imageWidth='{{cardWidth}}' imageHeight='{{cardHeight}}' onConfirm='confirmClothAlt' onCancel='cancelClothAlt' ref='saveChildRef24'>
+</cloth-alt><order-check show='{{orderCheckBoxShow}}' a:if='{{orderCheckBoxShow}}' ref='saveChildRef25'>
+</order-check>
+            </view>
