@@ -1,5 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const addStringToPageObject = require('./utils/addStringToPageObject');
+const extractSelectComponent = require('./utils/extractSelectComponent');
+const extractTagsAndClasses = require('./utils/extractTagsAndClasses');
 
 function parseRef(str) {
   const regex = /<([-\w]+)[^>]*ref=['"]([^'"]+)['"][^>]*>/g;
@@ -15,61 +18,16 @@ function parseRef(str) {
 function generateRefMethod(nodeName) {
   let refName = nodeName.charAt(0).toUpperCase() + nodeName.slice(1);
   const methodName = 'getRef' + refName;
-  return `${methodName}(ref) {
-    this.ref${refName} = ref.init();
-  }`;
-}
-
-function addToPageObject(wxPageContent, methodToInsert) {
-  const pageRegex = /Page\(\s*{[\s\S]*?}\s*\)/;
-  const pageMatch = wxPageContent.match(pageRegex);
-
-  if (pageMatch) {
-    const pageObject = pageMatch[0];
-    const methodName = methodToInsert.trim().split('(')[0];
-    const methodRegex = new RegExp(`\\b${methodName}\\b`);
-
-    if (methodRegex.test(pageObject)) {
-      // 如果已经存在同名方法，不进行添加
-      return wxPageContent;
-    }
-
-    const lastBraceIndex = pageObject.lastIndexOf('}');
-    const modifiedPageObject = pageObject.substring(0, lastBraceIndex) + ',\n' + methodToInsert + '\n' + pageObject.substring(lastBraceIndex);
-    const modifiedWxPageContent = wxPageContent.replace(pageRegex, modifiedPageObject);
-    return modifiedWxPageContent;
-  }
-
-  return wxPageContent;
+  return {
+    fnStr: `${methodName}(ref) {
+      this.ref${refName} = ref.init();
+    }`,
+    methodName,
+    refName: `ref${refName}`
+  };
 }
 
 
-// 提取页面中this.selectComponents
-function extractSelectComponent(input) {
-  const regex = /selectComponent\(\s*"(.*?)"\s*\)/g;
-  const matches = input.matchAll(regex);
-  const results = [];
-
-  for (const match of matches) {
-    results.push(match[1].slice(1));
-  }
-
-  return results;
-}
-
-
-
-function extractTagsAndClasses(input) {
-  const regex = /<([\w-]+)[^>]*class=(['"])([^'"]+)\2[^>]*>/g;
-  const matches = input.matchAll(regex);
-  const results = [];
-  for (const match of matches) {
-    const nodeName = match[1];
-    const className = match[3];
-    results.push({ nodeName, className });
-  }
-  return results;
-}
 
 
 
@@ -117,19 +75,19 @@ files.forEach(file => {
       const refMethods = uniqueList.map(item => {
         return {
           ...item,
-          refMethod: generateRefMethod(toCamelCase(item.nodeName))
+          ...generateRefMethod(toCamelCase(item.nodeName))
         }
       });
 
       // Insert the generated ref methods into the js file
       let jsContent = fs.readFileSync(filePath, 'utf8');
-      refMethods.forEach(({ className, refMethod, nodeName }) => {
-        jsContent = addToPageObject(jsContent, refMethod);
+      refMethods.forEach(({ className, fnStr, methodName, refName, nodeName }) => {
+        // jsContent = addStringToPageObject({ code: jsContent, methodName, refName });
         // Replace this.selectComponet('.x1') with this.refX2()
         const regex = new RegExp(`\\.selectComponent\\(\\s*['"]\\.${className}['"]\\s*\\)`, 'gs');
         let newNodeName = toCamelCase(nodeName)
-        let refName = newNodeName.charAt(0).toUpperCase() + newNodeName.slice(1);
-        jsContent = jsContent.replace(regex, `.ref${refName}()`);
+        let refName2 = newNodeName.charAt(0).toUpperCase() + newNodeName.slice(1);
+        jsContent = jsContent.replace(regex, `.ref${refName2}()`);
       });
       fs.writeFileSync(filePath, jsContent, 'utf8');
     }
